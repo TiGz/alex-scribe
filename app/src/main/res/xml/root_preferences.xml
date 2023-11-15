@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- Open AI API Key is our only setting -->
+    <PreferenceCategory app:title="@string/open_ai">
+        <EditTextPreference
+            app:key="api_key"
+            app:title="@string/api_key"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+</PreferenceScreen>
