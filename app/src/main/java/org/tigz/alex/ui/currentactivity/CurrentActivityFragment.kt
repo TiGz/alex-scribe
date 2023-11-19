@@ -1,4 +1,4 @@
-package org.tigz.alex.ui.dashboard
+package org.tigz.alex.ui.currentactivity
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import org.tigz.alex.databinding.FragmentDashboardBinding
+import org.tigz.alex.databinding.FragmentCurrentactivityBinding
 
-class DashboardFragment : Fragment() {
+class CurrentActivityFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentCurrentactivityBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +22,14 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val currentActivityViewModel =
+            ViewModelProvider(this).get(CurrentActivityViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentCurrentactivityBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textCurrentActivity
+        currentActivityViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Alex Scribe</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_activity">Activity</string>
+    <string name="title_camera">Camera</string>
     <string name="settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
@@ -10,5 +10,7 @@
     <string name="open_ai">Open AI</string>
     <!-- Messages Preferences -->
     <string name="api_key">API Key</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
