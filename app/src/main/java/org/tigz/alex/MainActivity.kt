@@ -46,10 +46,10 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // Request camera permissions
-        requestCameraPermission()
+        requestInternetPermission()
     }
 
-    private fun requestCameraPermission() {
-        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+    private fun requestInternetPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.INTERNET)
     }
 }

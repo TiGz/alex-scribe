@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "org.tigz.alex"
-        minSdk = 30
+        minSdk = 31
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"

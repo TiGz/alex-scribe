@@ -1,9 +1,11 @@
 package org.tigz.alex.ui.camera
 
+import android.Manifest
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -26,6 +28,22 @@ class CameraFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var imageCapture: ImageCapture
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Permission is granted. Continue the action or workflow in your app.
+        } else {
+            // Explain to the user that the feature is unavailable because the
+            // features require a permission that the user has denied.
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        requestCameraPermission()
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -89,6 +107,10 @@ class CameraFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun requestCameraPermission() {
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     companion object {
