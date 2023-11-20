@@ -73,7 +73,14 @@ class CurrentActivityFragment : Fragment() {
         binding.btnRecord.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> transcriptionService.startRecording()
-                MotionEvent.ACTION_UP -> transcriptionService.stopRecordingAndTranscribe()
+                MotionEvent.ACTION_UP -> transcriptionService.stopRecordingAndTranscribe(
+                    onSuccess = { transcription ->
+                        binding.textCurrentActivity.text = transcription
+                    },
+                    onError = { exception ->
+                        binding.textCurrentActivity.text = exception.message
+                    }
+                )
             }
             true
         }

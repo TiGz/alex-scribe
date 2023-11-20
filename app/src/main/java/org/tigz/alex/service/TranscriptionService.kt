@@ -44,7 +44,7 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
         }
     }
 
-    fun stopRecordingAndTranscribe() {
+    fun stopRecordingAndTranscribe(onSuccess: (String) -> Unit, onError: (Exception) -> Unit) {
         if ( isRecording ){
             mediaRecorder?.apply {
                 stop()
@@ -58,7 +58,7 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
             Log.d(TAG, "Recorded ${currentAudioFile!!.length() } bytes of audit to : ${currentAudioFile!!.absolutePath}")
 
             // hand off to speech to text service
-            speechToTextService.transcribeAudio(currentAudioFile!!)
+            speechToTextService.transcribeAudio(currentAudioFile!!, onSuccess, onError)
         }
     }
 
@@ -79,7 +79,14 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
 
     fun cleanUp(){
         if ( isRecording ){
-            stopRecordingAndTranscribe()
+            stopRecordingAndTranscribe(
+                onSuccess = { transcription ->
+                    Log.d(TAG, "cleanUp: $transcription")
+                },
+                onError = { exception ->
+                    Log.d(TAG, "cleanUp: ${exception.message}")
+                }
+            )
         }
         mediaPlayer?.release()
         mediaPlayer = null
