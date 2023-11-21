@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import org.tigz.alex.service.OpenAIFactory
 import org.tigz.alex.service.MediaService
 import org.tigz.alex.service.SpeechToTextService
+import org.tigz.alex.service.TextToSpeechService
 import org.tigz.alex.service.TranscriptionService
 
 /**
@@ -23,6 +24,10 @@ object AppModule {
         OpenAIFactory(context)
 
     @Provides
+    fun provideTextToSpeechService(@ApplicationContext context: Context): TextToSpeechService =
+        TextToSpeechService(context)
+
+    @Provides
     fun provideMediaService(@ApplicationContext context: Context): MediaService =
         MediaService(context)
 
@@ -33,6 +38,7 @@ object AppModule {
     @Provides
     fun provideTranscriptionService(@ApplicationContext context: Context, speechToTextService: SpeechToTextService): TranscriptionService =
         TranscriptionService(context, speechToTextService)
+
 
 
 }

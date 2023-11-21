@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import org.tigz.alex.databinding.FragmentCurrentactivityBinding
+import org.tigz.alex.service.TextToSpeechService
 import org.tigz.alex.service.TranscriptionService
 import javax.inject.Inject
 
@@ -20,6 +21,9 @@ class CurrentActivityFragment : Fragment() {
 
     @Inject
     lateinit var transcriptionService: TranscriptionService
+
+    @Inject
+    lateinit var textToSpeechService: TextToSpeechService
 
     private var _binding: FragmentCurrentactivityBinding? = null
 
@@ -76,6 +80,7 @@ class CurrentActivityFragment : Fragment() {
                 MotionEvent.ACTION_UP -> transcriptionService.stopRecordingAndTranscribe(
                     onSuccess = { transcription ->
                         binding.textCurrentActivity.text = transcription
+                        textToSpeechService.speak(transcription)
                     },
                     onError = { exception ->
                         binding.textCurrentActivity.text = exception.message

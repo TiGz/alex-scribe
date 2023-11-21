@@ -11,11 +11,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import org.tigz.alex.databinding.ActivityMainBinding
+import org.tigz.alex.service.TextToSpeechService
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var textToSpeechService: TextToSpeechService
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -51,5 +53,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestInternetPermission() {
         requestPermissionLauncher.launch(Manifest.permission.INTERNET)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        textToSpeechService.shutdown()
     }
 }
