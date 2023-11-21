@@ -37,6 +37,7 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
                 prepare()
             } catch (e: IOException) {
                 // Handle exceptions
+                Log.w(TAG, "startRecording",e)
             }
 
             start()
@@ -48,11 +49,9 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
         if ( isRecording ){
             mediaRecorder?.apply {
                 stop()
-                reset()
                 release()
             }
             mediaRecorder = null
-
             isRecording = false
 
             Log.d(TAG, "Recorded ${currentAudioFile!!.length() } bytes of audit to : ${currentAudioFile!!.absolutePath}")
@@ -67,7 +66,14 @@ class TranscriptionService @Inject constructor(private val context: Context, pri
             mediaPlayer?.release()  // Release any previous MediaPlayer
             mediaPlayer = MediaPlayer().apply {
                 try {
+                    Log.d(TAG, "playCurrentAudio: ${file.absolutePath}")
                     setDataSource(file.absolutePath)
+                    setAudioAttributes(
+                        android.media.AudioAttributes.Builder()
+                            .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH)
+                            .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
                     prepare()
                     start()
                 } catch (e: IOException) {

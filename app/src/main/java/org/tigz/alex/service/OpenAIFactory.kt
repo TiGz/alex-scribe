@@ -13,9 +13,10 @@ import kotlin.time.Duration.Companion.seconds
 class OpenAIFactory @Inject constructor(private val context: Context) {
 
     private var openAI: OpenAI? = null
+    private var apiKey: String? = null
 
     fun ensureOpenAI() : OpenAI {
-        if (openAI == null) {
+        if (openAI == null || apiKey != getApiKey()) {
             openAI = createOpenAI()
         }
         return openAI!!
@@ -23,7 +24,7 @@ class OpenAIFactory @Inject constructor(private val context: Context) {
 
     fun createOpenAI(): OpenAI {
         val config = OpenAIConfig(
-            token = "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",
+            token = getApiKey(),
             timeout = Timeout(socket = 30.seconds),
             // additional configurations...
         )
