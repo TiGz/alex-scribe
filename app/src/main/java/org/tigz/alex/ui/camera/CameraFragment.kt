@@ -13,16 +13,26 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.tigz.alex.databinding.FragmentCameraBinding
+import org.tigz.alex.service.ImageToTextService
 import org.tigz.alex.service.MediaService
+import org.tigz.alex.ui.currentactivity.CurrentActivityViewModel
 import javax.inject.Inject
+import org.tigz.alex.R
 
 @AndroidEntryPoint
 class CameraFragment : Fragment() {
 
+    private val currentActivityViewModel: CurrentActivityViewModel by viewModels()
+
     @Inject
     lateinit var mediaService: MediaService
+
+    @Inject
+    lateinit var imageToTextService: ImageToTextService
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
@@ -100,8 +110,23 @@ class CameraFragment : Fragment() {
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     // Handle the saved image
+                    imageToTextService.uploadImageAndFetchContents(output.savedUri!!,
+                        onSuccess = { text ->
+                            // move to the current activity fragment
+                            // and set the text on the current activity model
+                            currentActivityViewModel.updateText(text)
+                            navigateToCurrentActivityFragment()
+                        },
+                        onError = { errorMessage ->
+
+                        }
+                    )
                 }
             })
+    }
+
+    private fun navigateToCurrentActivityFragment() {
+        findNavController().navigate(R.id.action_cameraFragment_to_currentActivityFragment)
     }
 
     override fun onDestroyView() {

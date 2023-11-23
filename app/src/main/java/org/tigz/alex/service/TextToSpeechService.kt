@@ -25,6 +25,7 @@ class TextToSpeechService @Inject constructor(context: Context) : TextToSpeech.O
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech.language = Locale.ENGLISH
             textToSpeech.setSpeechRate(0.8f)
+            textToSpeech.setPitch(1.0f)
             isInitialized = true
         }
     }
@@ -42,7 +43,9 @@ class TextToSpeechService @Inject constructor(context: Context) : TextToSpeech.O
     }
 
     fun shutdown() {
-        textToSpeech.shutdown()
+        if ( isInitialized ){
+            textToSpeech.shutdown()
+        }
     }
 
 }

@@ -21,5 +21,9 @@
         android:id="@+id/navigation_camera"
         android:name="org.tigz.alex.ui.camera.CameraFragment"
         android:label="@string/title_camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_currentActivityFragment"
+            app:destination="@id/navigation_activity" />
+    </fragment>
 </navigation>

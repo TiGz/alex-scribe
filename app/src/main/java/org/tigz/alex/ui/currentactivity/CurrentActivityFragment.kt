@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import org.tigz.alex.databinding.FragmentCurrentactivityBinding
+import org.tigz.alex.service.SpeechRecognizerService
 import org.tigz.alex.service.TextToSpeechService
 import org.tigz.alex.service.TranscriptionService
 import javax.inject.Inject
@@ -19,11 +21,13 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CurrentActivityFragment : Fragment() {
 
-    @Inject
-    lateinit var transcriptionService: TranscriptionService
+    private val currentActivityViewModel: CurrentActivityViewModel by viewModels()
 
     @Inject
     lateinit var textToSpeechService: TextToSpeechService
+
+    @Inject
+    lateinit var speechRecognizerService: SpeechRecognizerService
 
     private var _binding: FragmentCurrentactivityBinding? = null
 
@@ -56,9 +60,6 @@ class CurrentActivityFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val currentActivityViewModel =
-            ViewModelProvider(this).get(CurrentActivityViewModel::class.java)
-
         _binding = FragmentCurrentactivityBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -74,31 +75,43 @@ class CurrentActivityFragment : Fragment() {
 
         // when the record button is held down then record the audio
         // when the record button stops being held down then transcribe the audio
-        binding.btnRecord.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> transcriptionService.startRecording()
-                MotionEvent.ACTION_UP -> transcriptionService.stopRecordingAndTranscribe(
-                    onSuccess = { transcription ->
-                        binding.textCurrentActivity.text = transcription
-                        textToSpeechService.speak(transcription)
-                    },
-                    onError = { exception ->
-                        binding.textCurrentActivity.text = exception.message
-                    }
-                )
-            }
-            true
-        }
+//        binding.btnRecord.setOnTouchListener { _, event ->
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> transcriptionService.startRecording()
+//                MotionEvent.ACTION_UP -> transcriptionService.stopRecordingAndTranscribe(
+//                    onSuccess = { transcription ->
+//                        binding.textCurrentActivity.text = transcription
+//                        textToSpeechService.speak(transcription)
+//                    },
+//                    onError = { exception ->
+//                        binding.textCurrentActivity.text = exception.message
+//                    }
+//                )
+//            }
+//            true
+//        }
 
-        // play on play
-        binding.btnPlay.setOnClickListener {
-            transcriptionService.playCurrentAudio()
+        binding.btnRecord.setOnClickListener {
+            speechRecognizerService.startTranscription(
+                onSuccess = { transcription ->
+                    binding.textCurrentActivity.text = transcription
+                    textToSpeechService.speak(transcription)
+                },
+                onError = { exception ->
+                    binding.textCurrentActivity.text = exception
+                }
+            )
+
+            // play on play
+            binding.btnPlay.setOnClickListener {
+                //transcriptionService.playCurrentAudio()
+            }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        transcriptionService.cleanUp()
+        //transcriptionService.cleanUp()
     }
 
     override fun onDestroyView() {
@@ -108,7 +121,7 @@ class CurrentActivityFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        transcriptionService.cleanUp()
+        //transcriptionService.cleanUp()
     }
 
 }
